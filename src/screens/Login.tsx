@@ -1,8 +1,11 @@
 import React, { FormEvent, useRef, useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { useAuth } from '../hooks/useAuth';
 
-export const Login: React.FC = () => {
+const Login: React.FC = () => {
+  const history = useHistory();
+  const location = useLocation();
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const { currentUser, login } = useAuth();
@@ -20,6 +23,12 @@ export const Login: React.FC = () => {
 
       if (emailRef.current && passwordRef.current) {
         await login(emailRef.current.value, passwordRef.current.value);
+
+        if (location.search) {
+          return history.push(location.search);
+        }
+
+        return history.push('/');
       }
     } catch {
       setError('Failed to log in');
@@ -35,3 +44,5 @@ export const Login: React.FC = () => {
     </form>
   );
 };
+
+export default Login;
